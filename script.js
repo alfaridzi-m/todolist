@@ -16,7 +16,7 @@ document.getElementById("date").textContent = date.toLocaleDateString('id', opti
             
             // Display time and date
             document.getElementById('time').innerHTML = 
-                `${hours}:${minutes}:${seconds}<br>${dateString}`;
+                `${hours}:${minutes}:${seconds} Local time`;
         }
 
         // Update the clock immediately and then every second

@@ -4,24 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo-list</title>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
     <link href="./style/style.css" rel="stylesheet">
 </head>
-<body class="bg-red-100">
-    <header>
-        <div class="bg-gray-100 flex flex-col gap-2 p-8 sm:flex-row sm:items-center sm:gap-6 sm:py-4 ...">
-            <img class="mx-auto block h-13 rounded-full sm:mx-0 sm:shrink-0" src="../public/image.png" alt="profile">
-            <div clasas="flex flex-col items-center">
+<body class="bg-red-100 flex flex-col items-center justify-center">
+    <header class="flex flex-col w-screen items-center justify-center">
+        <div class="bg-orange-900 flex flex-row w-full justify-center text-white h-1/6 align-center gap-3">
+            <img class="block h-10 rounded-full m-0 animate-bounce" src="../public/image.png" alt="profile">
+            <div clasas="flex flex-col items-center justify-center">
                 <h1>Studio Cat</h1>
                 <h2>Fulltime Tester</h2>
             </div>
         </div>
-        <p id="date"></p>
-        <p id="time"></p>
+        <div class="bg-amber-500 flex flex-row justify-around text-white w-full h-fit">
+            <span id="date"></span>
+            <span id="time"></spanp>
+        </div>
     </header>
-    <main> 
-        <div class="bg-gray-100 flex flex-col gap-2 p-8 sm:flex-row sm:items-center sm:gap-6 sm:py-4 ...">
-            <P class="">priority</P>
+    <main class="flex flex-col items-baseline justify-center w-sm bg-blue-500 m-3 p-3 rounded-3xl"> 
+        <div>
+            <p class="bg-cyan-200 text-cyan-950 rounded-3xl w-16 align-middle">priority</p>
             <select id="priority" class="bg-gray-100">
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -34,7 +35,7 @@
         </div>
         <div>
             <p>task</p>
-            <input type="text" id="task" class="bg-gray-100" placeholder="Enter your task">
+            <textarea id="message" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
         </div>
         <div>
             <button type="button" id="reset">Reset</button>
