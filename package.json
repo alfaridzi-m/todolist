@@ -2,5 +2,24 @@
   "dependencies": {
     "@tailwindcss/cli": "^4.1.6",
     "tailwindcss": "^4.1.6"
-  }
+  },
+  "name": "todolist_",
+  "version": "1.0.0",
+  "main": "script.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx @tailwindcss/cli -i ./src/input.css -o ./style/style.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alfaridzi-m/todolist.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alfaridzi-m/todolist/issues"
+  },
+  "homepage": "https://github.com/alfaridzi-m/todolist#readme",
+  "description": ""
 }
