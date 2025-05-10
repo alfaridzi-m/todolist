@@ -6,13 +6,59 @@
     <title>Todo-list</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
+<body class="bg-red-100">
     <header>
-        <img class="w-20 " src="./public/image.png" alt="profile">
-        <h1>Studio Pio</h1>
-        <h2>Fulltime Tester</h2>
+        <div class="bg-gray-100 flex flex-col gap-2 p-8 sm:flex-row sm:items-center sm:gap-6 sm:py-4 ...">
+            <img class="mx-auto block h-24 rounded-full sm:mx-0 sm:shrink-0" src="./public/image.png" alt="profile">
+            <div clasas="flex flex-col items-center">
+                <h1>Studio Pio</h1>
+                <h2>Fulltime Tester</h2>
+            </div>
+        </div>
         <p id="date"></p>
+        <p id="time"></p>
     </header>
+    <main> 
+        <div>
+            <P>priority</P>
+            <select id="priority" class="bg-gray-100">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+        </div>
+        <div>
+            <p>Date</p>
+            <input type="date" id="date" class="bg-gray-100">
+        </div>
+        <div>
+            <p>task</p>
+            <input type="text" id="task" class="bg-gray-100" placeholder="Enter your task">
+        </div>
+        <div>
+            <button type="button" id="reset">Reset</button>
+            <button type="button" id="submit">submit</button>
+        </div>
+    </main>
+    <footer>
+        <div id="tab">
+            <div id="tab1">todo</div>
+            <div id="done">Done</div>
+        </div>
+        <a href="#">Clear All</a>
+        <div id ="todo">
+            <div id="todo1">
+                <p>Task</p>
+                <p>Priority</p>
+                <p>Date</p>
+            </div>
+            <div id="done">
+                <p>Task</p>
+                <p>Priority</p>
+                <p>Date</p>
+            </div>
+        </div>
+    </footer>
 </body>
     <script src="script.js"> </script>
 </html>
