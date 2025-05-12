@@ -1,5 +1,5 @@
 const date = new Date();
-const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+const options = { year: 'numeric', month: 'long', day: 'numeric' };
 document.getElementById("date").textContent = date.toLocaleDateString('id', options);
 
  function updateClock() {
@@ -16,7 +16,7 @@ document.getElementById("date").textContent = date.toLocaleDateString('id', opti
             
             // Display time and date
             document.getElementById('time').innerHTML = 
-                `${hours}:${minutes}:${seconds} Local time`;
+                `${hours}:${minutes}:${seconds}`;
         }
 
         // Update the clock immediately and then every second
