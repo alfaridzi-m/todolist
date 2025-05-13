@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="./public/favicon.png" type="image/x-icon">
+<link href="./style/style.css" rel="stylesheet">
+</head>
+<body class="p-6 max-w-md mx-auto">
+    <div class="space-y-4">
+      <h2 class="text-xl font-bold">Pilih Tanggal</h2>
+      
+      <input 
+        type="date" 
+        id="tanggalInput" 
+        class="w-full px-3 py-2 border rounded-md"
+      >
+      
+      <button 
+        onclick="tampilkanTanggal()"
+        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+      >
+        Tampilkan dalam Format DD/MM/YYYY
+      </button>
+      
+      <div class="p-4 bg-gray-100 rounded-md">
+        <strong>Hasil:</strong> <span id="hasilTanggal" class="font-mono">-</span>
+      </div>
+    </div>
+  
+    <script>
+      function tampilkanTanggal() {
+        const input = document.getElementById('tanggalInput');
+        console.log(input.value)
+        const hasil = document.getElementById('hasilTanggal');
+        console.log(hasil, 'hasil')
+        if (!input.value) {
+          hasil.textContent = "Silakan pilih tanggal terlebih dahulu";
+          return;
+        }
+        
+        // Ambil komponen tanggal
+        const [tahun, bulan, hari] = input.value.split('-');
+        
+        // Pastikan 2 digit untuk hari dan bulan
+        const hariFormatted = hari.padStart(2, '0');
+        console.log(hariFormatted)
+        const bulanFormatted = bulan.padStart(2, '0');
+        
+        // Gabungkan dalam format DD/MM/YYYY
+        hasil.textContent = `${hariFormatted}/${bulanFormatted}/${tahun}`;
+      }
+    </script>
+  </body>
+  </html>
