@@ -77,7 +77,7 @@ document.getElementById('todo-list').addEventListener('submit', function(e) {
     console.log(newTask)
 
     newTask.innerHTML = `
-            <div class="mr-2"><input class= "check-box h-5 w-5 text-blue-600 rounded focus:ring-blue-500" type="checkbox"></div>
+            <div class="mr-2"><input class= "check-box h-3 w-3 text-blue-600 rounded focus:ring-blue-500" type="checkbox"></div>
             <div class="w-1/7 ">${totime}</div>
             <div class="w-6/7 text-sm" >
                 <div class="w-full">${task}</div>
