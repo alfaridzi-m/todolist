@@ -208,12 +208,6 @@
         checkbox.addEventListener('change', function() {
           if (this.checked) {
             taskItem.classList.add('line-through', 'text-gray-400');
-            setTimeout(() => {
-              doneList.appendChild(taskItem);
-              this.disabled = true;
-              saveTasks();
-              updateCounts();
-            }, 300);
           }
         });
         

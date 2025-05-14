@@ -50,26 +50,58 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-    document.getElementById('todo-list').addEventListener('submit', function(e) {
+document.getElementById('todo-list').addEventListener('submit', function(e) {
         e.preventDefault();
+    const todoList = document.getElementById('list-Todo1');
     const prioity = document.querySelector('input[name="priority"]:checked').value;
     const todate = document.getElementById('date2').value;
     const totime = document.getElementById('time2').value;
     const task = document.getElementById('task').value; 
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-    console.log(prioity)
     const dateObj = new Date(todate);
     const formattedDate = dateObj.toLocaleDateString('id-ID', { 
       weekday: 'long', 
       day: 'numeric', 
       month: 'long', 
-      year: 'numeric' 
-    });
-    console.log(formattedDate)
-    console.log(totime)
-    console.log(task)
-})
+      year: 'numeric' })
+    console.log(prioity)
 
+    const priorityColor = {
+        low: 'border-r-green-500',
+        medium: 'border-r-yellow-500',
+        high: 'border-r-red-500',
+    }
+    const newTask = document.createElement('div');
+
+    newTask.className = `flex flex-row border-1 items-center rounded-sm p-1.5 h-12 border-r-6 ${priorityColor[prioity]}`
+    console.log(newTask)
+
+    newTask.innerHTML = `
+            <div class="mr-2"><input class= "check-box h-5 w-5 text-blue-600 rounded focus:ring-blue-500" type="checkbox"></div>
+            <div class="w-1/7 ">${totime}</div>
+            <div class="w-6/7 text-sm" >
+                <div class="w-full">${task}</div>
+                <div class="w-full">${formattedDate}</div>
+            </div>`
+
+    todoList.appendChild(newTask);
+
+    const checkbox = newTask.querySelector('.check-box');
+        checkbox.addEventListener('change', function() {
+          if (this.checked) {
+            newTask.classList.add('line-through', 'bg-gray-800', 'text-gray-400');
+            this.disabled = true;
+          }
+        });
+    });
+
+    // function deleteTask() {
+    //     const checkbox = document.querySelector('input[type="checkbox"]:checked');
+    //     if (checkbox) {
+    //         checkbox.closest('div').remove();
+    //     }
+     
+    // }
 
 // const nama = 'Jainal'
 // const kerjaan = 'Mahasiswa'
