@@ -58,7 +58,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const task = document.getElementById('task').value; 
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
     console.log(prioity)
-    console.log(todate)
+    const dateObj = new Date(todate);
+    const formattedDate = dateObj.toLocaleDateString('id-ID', { 
+      weekday: 'long', 
+      day: 'numeric', 
+      month: 'long', 
+      year: 'numeric' 
+    });
+    console.log(formattedDate)
     console.log(totime)
     console.log(task)
 })

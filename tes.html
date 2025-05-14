@@ -3,53 +3,312 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="./public/favicon.png" type="image/x-icon">
-<link href="./style/style.css" rel="stylesheet">
+  <title>Todo List with Tailwind</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="p-6 max-w-md mx-auto">
-    <div class="space-y-4">
-      <h2 class="text-xl font-bold">Pilih Tanggal</h2>
+<body class="bg-gray-50 min-h-screen p-4 md:p-8">
+  <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Todo List App</h1>
+    
+    <!-- Input Form -->
+    <form id="todoForm" class="space-y-4 mb-8">
+      <div>
+        <label for="task" class="block text-sm font-medium text-gray-700 mb-1">Pekerjaan:</label>
+        <input type="text" id="task" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
       
-      <input 
-        type="date" 
-        id="tanggalInput" 
-        class="w-full px-3 py-2 border rounded-md"
-      >
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label for="priority" class="block text-sm font-medium text-gray-700 mb-1">Priority:</label>
+          <select id="priority" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        
+        <div>
+          <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Tanggal:</label>
+          <input type="date" id="date" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div>
+          <label for="time" class="block text-sm font-medium text-gray-700 mb-1">Waktu:</label>
+          <input type="time" id="time" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+      </div>
       
-      <button 
-        onclick="tampilkanTanggal()"
-        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-      >
-        Tampilkan dalam Format DD/MM/YYYY
+      <button type="submit" class="w-full md:w-auto px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+        Tambah Pekerjaan
       </button>
+    </form>
+    
+    <!-- Tabs -->
+    <div class="border-b border-gray-200 mb-4">
+      <nav class="-mb-px flex space-x-8">
+        <button id="todoTabBtn" class="tab-button active border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+          Pekerjaan (<span id="todoCount">0</span>)
+        </button>
+        <button id="doneTabBtn" class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+          Selesai (<span id="doneCount">0</span>)
+        </button>
+      </nav>
+    </div>
+    
+    <!-- Tab Contents -->
+    <div class="space-y-4">
+      <!-- Active Tasks Tab -->
+      <div id="todoTab" class="tab-content active">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-medium text-gray-900">Daftar Pekerjaan</h2>
+          <button id="deleteAllTodo" class="px-3 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+            Hapus Semua
+          </button>
+        </div>
+        <div id="todoList" class="space-y-2"></div>
+      </div>
       
-      <div class="p-4 bg-gray-100 rounded-md">
-        <strong>Hasil:</strong> <span id="hasilTanggal" class="font-mono">-</span>
+      <!-- Completed Tasks Tab -->
+      <div id="doneTab" class="tab-content hidden">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-medium text-gray-900">Pekerjaan Selesai</h2>
+          <button id="deleteAllDone" class="px-3 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+            Hapus Semua
+          </button>
+        </div>
+        <div id="doneList" class="space-y-2"></div>
       </div>
     </div>
-  
-    <script>
-      function tampilkanTanggal() {
-        const input = document.getElementById('tanggalInput');
-        console.log(input.value)
-        const hasil = document.getElementById('hasilTanggal');
-        console.log(hasil, 'hasil')
-        if (!input.value) {
-          hasil.textContent = "Silakan pilih tanggal terlebih dahulu";
-          return;
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // DOM Elements
+      const todoForm = document.getElementById('todoForm');
+      const todoList = document.getElementById('todoList');
+      const doneList = document.getElementById('doneList');
+      const todoTabBtn = document.getElementById('todoTabBtn');
+      const doneTabBtn = document.getElementById('doneTabBtn');
+      const todoTab = document.getElementById('todoTab');
+      const doneTab = document.getElementById('doneTab');
+      const deleteAllTodoBtn = document.getElementById('deleteAllTodo');
+      const deleteAllDoneBtn = document.getElementById('deleteAllDone');
+      
+      // Tab Switching
+      todoTabBtn.addEventListener('click', () => switchTab('todo'));
+      doneTabBtn.addEventListener('click', () => switchTab('done'));
+      
+      function switchTab(tab) {
+        // Update buttons
+        todoTabBtn.classList.remove('border-blue-500', 'text-blue-600');
+        todoTabBtn.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+        doneTabBtn.classList.remove('border-blue-500', 'text-blue-600');
+        doneTabBtn.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+        
+        // Update active tab
+        if (tab === 'todo') {
+          todoTabBtn.classList.add('border-blue-500', 'text-blue-600');
+          todoTabBtn.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+          todoTab.classList.remove('hidden');
+          todoTab.classList.add('active');
+          doneTab.classList.add('hidden');
+          doneTab.classList.remove('active');
+        } else {
+          doneTabBtn.classList.add('border-blue-500', 'text-blue-600');
+          doneTabBtn.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+          doneTab.classList.remove('hidden');
+          doneTab.classList.add('active');
+          todoTab.classList.add('hidden');
+          todoTab.classList.remove('active');
         }
-        
-        // Ambil komponen tanggal
-        const [tahun, bulan, hari] = input.value.split('-');
-        
-        // Pastikan 2 digit untuk hari dan bulan
-        const hariFormatted = hari.padStart(2, '0');
-        console.log(hariFormatted)
-        const bulanFormatted = bulan.padStart(2, '0');
-        
-        // Gabungkan dalam format DD/MM/YYYY
-        hasil.textContent = `${hariFormatted}/${bulanFormatted}/${tahun}`;
       }
-    </script>
-  </body>
-  </html>
+      
+      // Load tasks from localStorage
+      loadTasks();
+      updateCounts();
+      
+      // Form submission
+      todoForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const task = document.getElementById('task').value;
+        const priority = document.getElementById('priority').value;
+        const date = document.getElementById('date').value;
+        const time = document.getElementById('time').value;
+        
+        if (task && date && time) {
+          addTask(task, priority, date, time);
+          todoForm.reset();
+        }
+      });
+      
+      // Delete All buttons
+      deleteAllTodoBtn.addEventListener('click', function() {
+        if (todoList.children.length > 0 && confirm('Apakah Anda yakin ingin menghapus semua pekerjaan?')) {
+          todoList.innerHTML = '';
+          saveTasks();
+          updateCounts();
+        }
+        else {
+          alert('Tidak ada pekerjaan yang dapat dihapus.');
+        }
+      });
+      
+      deleteAllDoneBtn.addEventListener('click', function() {
+        if (doneList.children.length > 0 && confirm('Apakah Anda yakin ingin menghapus semua pekerjaan selesai?')) {
+          doneList.innerHTML = '';
+          saveTasks();
+          updateCounts();
+        }
+      });
+      
+      // Add new task
+      function addTask(task, priority, date, time) {
+        const taskId = Date.now();
+        const taskItem = document.createElement('div');
+        
+        // Priority colors
+        const priorityColors = {
+          high: 'border-red-500',
+          medium: 'border-yellow-500',
+          low: 'border-green-500'
+        };
+        
+        taskItem.className = `flex items-center justify-between p-3 border-l-4 ${priorityColors[priority]} bg-gray-50 rounded-md`;
+        taskItem.dataset.id = taskId;
+        
+        const dateObj = new Date(`${date}T${time}`);
+        const formattedDate = dateObj.toLocaleDateString('id-ID', { 
+          weekday: 'long', 
+          day: 'numeric', 
+          month: 'long', 
+          year: 'numeric' 
+        });
+        const formattedTime = dateObj.toLocaleTimeString('id-ID', { 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        });
+        
+        taskItem.innerHTML = `
+          <div class="flex-1">
+            <div class="task-title font-medium">${task}</div>
+            <div class="task-meta text-sm text-gray-500">
+              ${formattedDate} • ${formattedTime} • 
+              <span class="priority-label capitalize">${priority}</span>
+            </div>
+          </div>
+          <input type="checkbox" class="task-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500">
+        `;
+        
+        todoList.appendChild(taskItem);
+        updateCounts();
+        
+        // Add event listener to checkbox
+        const checkbox = taskItem.querySelector('.task-checkbox');
+        checkbox.addEventListener('change', function() {
+          if (this.checked) {
+            taskItem.classList.add('line-through', 'text-gray-400');
+            setTimeout(() => {
+              doneList.appendChild(taskItem);
+              this.disabled = true;
+              saveTasks();
+              updateCounts();
+            }, 300);
+          }
+        });
+        
+        saveTasks();
+      }
+      
+      // Update task counts
+      function updateCounts() {
+        document.getElementById('todoCount').textContent = todoList.children.length;
+        document.getElementById('doneCount').textContent = doneList.children.length;
+      }
+      
+      // Save tasks to localStorage
+      function saveTasks() {
+        const tasks = [];
+        const doneTasks = [];
+        
+        // Get active tasks
+        document.querySelectorAll('#todoList > div').forEach(item => {
+          tasks.push({
+            id: item.dataset.id,
+            html: item.innerHTML,
+            className: item.className
+          });
+        });
+        
+        // Get completed tasks
+        document.querySelectorAll('#doneList > div').forEach(item => {
+          doneTasks.push({
+            id: item.dataset.id,
+            html: item.innerHTML,
+            className: item.className
+          });
+        });
+        
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        localStorage.setItem('doneTasks', JSON.stringify(doneTasks));
+      }
+      
+      // Load tasks from localStorage
+      function loadTasks() {
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        const doneTasks = JSON.parse(localStorage.getItem('doneTasks')) || [];
+        
+        // Priority colors
+        const priorityColors = {
+          high: 'border-red-500',
+          medium: 'border-yellow-500',
+          low: 'border-green-500'
+        };
+        
+        // Load active tasks
+        tasks.forEach(task => {
+          const taskItem = document.createElement('div');
+          taskItem.className = task.className;
+          taskItem.dataset.id = task.id;
+          taskItem.innerHTML = task.html;
+          
+          todoList.appendChild(taskItem);
+          
+          // Reattach event listener to checkbox
+          const checkbox = taskItem.querySelector('.task-checkbox');
+          if (checkbox) {
+            checkbox.addEventListener('change', function() {
+              if (this.checked) {
+                taskItem.classList.add('line-through', 'text-gray-400');
+                setTimeout(() => {
+                  doneList.appendChild(taskItem);
+                  this.disabled = true;
+                  saveTasks();
+                  updateCounts();
+                }, 300);
+              }
+            });
+          }
+        });
+        
+        // Load completed tasks
+        doneTasks.forEach(task => {
+          const taskItem = document.createElement('div');
+          taskItem.className = task.className + ' line-through text-gray-400';
+          taskItem.dataset.id = task.id;
+          taskItem.innerHTML = task.html;
+          
+          // Disable checkbox for completed tasks
+          const checkbox = taskItem.querySelector('.task-checkbox');
+          if (checkbox) {
+            checkbox.checked = true;
+            checkbox.disabled = true;
+          }
+          
+          doneList.appendChild(taskItem);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
