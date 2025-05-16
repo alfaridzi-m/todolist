@@ -1,6 +1,5 @@
 const date = new Date();
-const options = { year: 'numeric', month: 'long', day: 'numeric' };
-document.getElementById("date").textContent = date.toLocaleDateString('id', options);
+document.getElementById("date").textContent = date.toLocaleDateString('id');
 
 // Function to update the clock
  function updateClock() {
@@ -53,12 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('todo-list').addEventListener('submit', function(e) {
         e.preventDefault();
     const todoList = document.getElementById('list-Todo1');
+    const doneList = document.getElementById('list-Done1');
     const prioity = document.querySelector('input[name="priority"]:checked').value;
+    const popUp =document.getElementById('addItem')
     const todate = document.getElementById('date2').value;
     const totime = document.getElementById('time2').value;
     const task = document.getElementById('task').value; 
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
     const dateObj = new Date(todate);
+    const DeleteButton = document.getElementById('delete-all')
     const formattedDate = dateObj.toLocaleDateString('id-ID', { 
       weekday: 'long', 
       day: 'numeric', 
@@ -71,10 +72,14 @@ document.getElementById('todo-list').addEventListener('submit', function(e) {
         medium: 'border-r-yellow-500',
         high: 'border-r-red-500',
     }
+    const prioritBGyColor = {
+        low: 'bg-green-500',
+        medium: 'bg-yellow-500',
+        high: 'bg-red-500',
+    }
     const newTask = document.createElement('div');
 
-    newTask.className = `flex flex-row border-1 items-center rounded-sm p-1.5 h-12 border-r-6 ${priorityColor[prioity]}`
-    console.log(newTask)
+    newTask.className = `flex flex-row border-1 items-center rounded-sm p-1.5 h-12 animate-shake animate-once animate-ease-in-out border-r-6 mb-1 ${priorityColor[prioity]}`
 
     newTask.innerHTML = `
             <div class="mr-2"><input class= "check-box h-3 w-3 text-blue-600 rounded focus:ring-blue-500" type="checkbox"></div>
@@ -83,25 +88,57 @@ document.getElementById('todo-list').addEventListener('submit', function(e) {
                 <div class="w-full">${task}</div>
                 <div class="w-full">${formattedDate}</div>
             </div>`
+            todoList.insertBefore(newTask, todoList.firstChild);
+            popUp.classList.remove('hidden', 'opacity-0')
+            popUp.classList.add('opacity-100', 'top-3')
+            popUp.classList.add(`${prioritBGyColor[prioity]}`)
+            setTimeout(() => {
+                popUp.classList.add('opacity-0')
+                setTimeout(() => popUp.classList.add('hidden'),300)
+            }, 700)
+            setTimeout(() => {
+                popUp.classList.remove(`${prioritBGyColor[prioity]}`)
+            },700)
 
-    todoList.appendChild(newTask);
+
 
     const checkbox = newTask.querySelector('.check-box');
         checkbox.addEventListener('change', function() {
           if (this.checked) {
             newTask.classList.add('line-through', 'bg-gray-800', 'text-gray-400');
-            this.disabled = true;
+            setTimeout(() => {
+                doneList.appendChild(newTask);
+                this.disabled =true
+                updateCounts();
+                },300)
+
           }
         });
+        updateCounts();
+    
+
+    DeleteButton.addEventListener('click', function() {
+    if (todoList.children.length > 0 && confirm('Apakah anda yakin ingin menghapus semua?')) {
+        todoList.innerHTML = '';
+        doneList.innerHTML = '';
+        updateCounts();
+    }
+
     });
 
-    // function deleteTask() {
-    //     const checkbox = document.querySelector('input[type="checkbox"]:checked');
-    //     if (checkbox) {
-    //         checkbox.closest('div').remove();
-    //     }
-     
-    // }
+    
+    function updateCounts() {
+        document.getElementById('countTodo').textContent = todoList.children.length;
+        document.getElementById('countDone').textContent = doneList.children.length;
+        }
+        
+
+
+    });
+
+    
+
+
 
 // const nama = 'Jainal'
 // const kerjaan = 'Mahasiswa'
