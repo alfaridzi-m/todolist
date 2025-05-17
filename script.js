@@ -29,6 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const doneTab = document.getElementById('done-button');
     const todoContent = document.getElementById('todo');
     const doneContent = document.getElementById('done');
+    const deleteDone = document.getElementById('delete-done')
+    const DeleteTodo = document.getElementById('delete-todo')
 
     function switchTab(activeTab, activeContent, inactiveTab, inactiveContent) {
         activeTab.classList.remove('bg-[#F2F7F5]');
@@ -42,15 +44,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     todoTab.addEventListener('click', () => {
         switchTab(todoTab, todoContent, doneTab, doneContent);
+        DeleteTodo.classList.remove('hidden')
+        deleteDone.classList.add('hidden')
     });
 
     doneTab.addEventListener('click', () => {
         switchTab(doneTab, doneContent, todoTab, todoContent);
+        DeleteTodo.classList.add('hidden')
+        deleteDone.classList.remove('hidden')
+
     });
+    doneTab.addEventListener('click', () => {
+        deleteDone.classList.remove('hidden')
+    })
 });
 
 document.getElementById('todo-list').addEventListener('submit', function(e) {
         e.preventDefault();
+    const formTodo = document.getElementById('todo-list')
     const todoList = document.getElementById('list-Todo1');
     const doneList = document.getElementById('list-Done1');
     const prioity = document.querySelector('input[name="priority"]:checked').value;
@@ -59,14 +70,20 @@ document.getElementById('todo-list').addEventListener('submit', function(e) {
     const totime = document.getElementById('time2').value;
     const task = document.getElementById('task').value; 
     const dateObj = new Date(todate);
-    const DeleteButton = document.getElementById('delete-all')
+    const DeleteAll = document.getElementById('delete-all')
+    const DeleteTodo = document.getElementById('delete-todo')
+    const DeleteDone = document.getElementById('delete-done')
+    
     const formattedDate = dateObj.toLocaleDateString('id-ID', { 
       weekday: 'long', 
       day: 'numeric', 
       month: 'long', 
       year: 'numeric' })
     console.log(prioity)
-
+    
+    updateCounts()
+    
+    //add task
     const priorityColor = {
         low: 'border-r-green-500',
         medium: 'border-r-yellow-500',
@@ -95,13 +112,16 @@ document.getElementById('todo-list').addEventListener('submit', function(e) {
             setTimeout(() => {
                 popUp.classList.add('opacity-0')
                 setTimeout(() => popUp.classList.add('hidden'),300)
-            }, 700)
+            }, 1000)
             setTimeout(() => {
                 popUp.classList.remove(`${prioritBGyColor[prioity]}`)
-            },700)
+            },1000)
+    
+            saveLocal()
+            formTodo.reset()
 
 
-
+    
     const checkbox = newTask.querySelector('.check-box');
         checkbox.addEventListener('change', function() {
           if (this.checked) {
@@ -110,31 +130,117 @@ document.getElementById('todo-list').addEventListener('submit', function(e) {
                 doneList.appendChild(newTask);
                 this.disabled =true
                 updateCounts();
+                saveLocal()
                 },300)
-
           }
         });
         updateCounts();
+        saveLocal()
     
-
-    DeleteButton.addEventListener('click', function() {
-    if (todoList.children.length > 0 && confirm('Apakah anda yakin ingin menghapus semua?')) {
-        todoList.innerHTML = '';
-        doneList.innerHTML = '';
-        updateCounts();
-    }
-
-    });
+        DeleteAll.addEventListener('click', function() {
+        if (todoList.children.length > 0 && doneList.children.length > 0 && confirm('Apakah anda yakin ingin menghapus Todo dan Done?')) {
+            todoList.innerHTML = '';
+            doneList.innerHTML = '';
+            updateCounts();
+            saveLocal()
+        }    
+        });
+        DeleteTodo.addEventListener('click', function() {
+            if (todoList.children.length > 0 && confirm('Apakah anda yakin ingin menghapus Todo?')) {
+                todoList.innerHTML = '';
+                updateCounts();
+                saveLocal()
+                }
+            });
+        
+        DeleteDone.addEventListener('click', function() {
+            if (doneList.children.length > 0 && confirm('Apakah anda yakin ingin menghapus Done?')) {
+                doneList.innerHTML = '';
+                updateCounts();
+                saveLocal()
+                }
+            });
 
     
     function updateCounts() {
         document.getElementById('countTodo').textContent = todoList.children.length;
         document.getElementById('countDone').textContent = doneList.children.length;
         }
+
+    function saveLocal() {
+        const task  = []
+        const doneTask = []
+    
+        // Get active tasks
+        document.querySelectorAll('#list-Todo1 > div').forEach(item => {
+            task.push({
+            id: item.dataset.id,
+            html: item.innerHTML,
+            className: item.className
+            });
+        });
         
+        // Get completed tasks
+        document.querySelectorAll('#list-Done1 > div').forEach(item => {
+            doneTask.push({
+            id: item.dataset.id,
+            html: item.innerHTML,
+            className: item.className
+            });
+        });
+        
+        localStorage.setItem('task', JSON.stringify(task));
+        localStorage.setItem('doneTask', JSON.stringify(doneTask));
+    }
 
-
-    });
+    function loadTasks() {
+        const task = JSON.parse(localStorage.getItem('task')) || [];
+        const doneTask = JSON.parse(localStorage.getItem('doneTask')) || [];
+      
+      // Load active tasks
+      task.forEach(task => {
+        const taskItem = document.createElement('div');
+        taskItem.className = task.className;
+        taskItem.dataset.id = task.id;
+        taskItem.innerHTML = task.html;
+        
+        todoList.appendChild(taskItem);
+        
+        // Reattach event listener to checkbox
+        const checkbox = taskItem.querySelector('.task-checkbox');
+        if (checkbox) {
+          checkbox.addEventListener('change', function() {
+            if (this.checked) {
+              taskItem.classList.add('line-through', 'text-gray-400');
+              setTimeout(() => {
+                doneList.appendChild(taskItem);
+                this.disabled = true;
+                saveTasks();
+                updateCounts();
+              }, 300);
+            }
+          });
+        }
+      });
+      
+      // Load completed tasks
+      doneTask.forEach(task => {
+        const taskItem = document.createElement('div');
+        taskItem.className = task.className + ' line-through text-gray-400';
+        taskItem.dataset.id = task.id;
+        taskItem.innerHTML = task.html;
+        
+        // Disable checkbox for completed tasks
+        const checkbox = taskItem.querySelector('.task-checkbox');
+        if (checkbox) {
+          checkbox.checked = true;
+          checkbox.disabled = true;
+        }
+        
+        doneList.appendChild(taskItem);
+        });
+    }
+});
 
     
 
