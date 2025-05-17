@@ -59,6 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 });
 
+
+
 document.getElementById('todo-list').addEventListener('submit', function(e) {
         e.preventDefault();
     const formTodo = document.getElementById('todo-list')
@@ -81,6 +83,7 @@ document.getElementById('todo-list').addEventListener('submit', function(e) {
       year: 'numeric' })
     console.log(prioity)
     
+    loadTasks()
     updateCounts()
     
     //add task
@@ -95,6 +98,7 @@ document.getElementById('todo-list').addEventListener('submit', function(e) {
         high: 'bg-red-500',
     }
     const newTask = document.createElement('div');
+    newTask.dataset.id = Date.now();
 
     newTask.className = `flex flex-row border-1 items-center rounded-sm p-1.5 h-12 animate-shake animate-once animate-ease-in-out border-r-6 mb-1 ${priorityColor[prioity]}`
 
@@ -120,11 +124,9 @@ document.getElementById('todo-list').addEventListener('submit', function(e) {
             saveLocal()
             formTodo.reset()
 
-
-    
     const checkbox = newTask.querySelector('.check-box');
         checkbox.addEventListener('change', function() {
-          if (this.checked) {
+            if (this.checked) {
             newTask.classList.add('line-through', 'bg-gray-800', 'text-gray-400');
             setTimeout(() => {
                 doneList.appendChild(newTask);
@@ -132,36 +134,34 @@ document.getElementById('todo-list').addEventListener('submit', function(e) {
                 updateCounts();
                 saveLocal()
                 },300)
-          }
+            }
         });
-        updateCounts();
-        saveLocal()
+
+
+
+
     
-        DeleteAll.addEventListener('click', function() {
-        if (todoList.children.length > 0 && doneList.children.length > 0 && confirm('Apakah anda yakin ingin menghapus Todo dan Done?')) {
+
+    function handleDelete(element, message) {
+        if (confirm(message)) {
+            element.innerHTML = '';
+            updateCounts();
+            saveLocal();
+        }
+    }
+
+    DeleteAll.addEventListener('click', function() {
+        if (confirm('Apakah anda yakin ingin menghapus Todo dan Done?')) {
             todoList.innerHTML = '';
             doneList.innerHTML = '';
             updateCounts();
-            saveLocal()
-        }    
-        });
-        DeleteTodo.addEventListener('click', function() {
-            if (todoList.children.length > 0 && confirm('Apakah anda yakin ingin menghapus Todo?')) {
-                todoList.innerHTML = '';
-                updateCounts();
-                saveLocal()
-                }
-            });
-        
-        DeleteDone.addEventListener('click', function() {
-            if (doneList.children.length > 0 && confirm('Apakah anda yakin ingin menghapus Done?')) {
-                doneList.innerHTML = '';
-                updateCounts();
-                saveLocal()
-                }
-            });
+            saveLocal();
+        }
+    });
 
-    
+    DeleteTodo.addEventListener('click', () => handleDelete(todoList, 'Apakah anda yakin ingin menghapus Todo?'));
+    DeleteDone.addEventListener('click', () => handleDelete(doneList, 'Apakah anda yakin ingin menghapus Done?'));
+
     function updateCounts() {
         document.getElementById('countTodo').textContent = todoList.children.length;
         document.getElementById('countDone').textContent = doneList.children.length;
@@ -241,24 +241,3 @@ document.getElementById('todo-list').addEventListener('submit', function(e) {
         });
     }
 });
-
-    
-
-
-
-// const nama = 'Jainal'
-// const kerjaan = 'Mahasiswa'
-// const umur = 20
-// const newx = {
-//     nama: "Ola", 
-//     kerjaan: "PNS",
-//     umur : 25
-// }
-// console.log(newx)
-// let identitas = {nama, kerjaan, umur}
-// console.log(identitas)
-// // let newy = [...identitas, newx]
-// let yy = [identitas, newx]
-// console.log(yy)
-
-// console.log(newy)
