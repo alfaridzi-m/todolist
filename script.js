@@ -9,11 +9,7 @@ document.getElementById("date").textContent = date.toLocaleDateString('id');
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
-            
-            // Format date
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const dateString = now.toLocaleDateString(undefined, options);
-            
+ 
             // Display time and date
             document.getElementById('time').innerHTML = 
                 `${hours}:${minutes}:${seconds}`;
@@ -115,14 +111,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const newTask = document.createElement('div');
         newTask.dataset.id = Date.now();
 
-        newTask.className = `flex flex-row border-1 items-center rounded-sm p-1.5 h-12 animate-shake animate-once animate-ease-in-out border-r-6 mb-1 ${priorityColor[prioity]}`
-
+        newTask.className = `flex flex-row border-1 items-center justify-around rounded-sm p-1.5 h-12 animate-shake animate-once animate-ease-in-out border-r-6 mb-1 ${priorityColor[prioity]}`
+        const now = new Date();
+            
+            // Format time with leading zeros
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const date = String(now.toLocaleDateString('id'));
         newTask.innerHTML = `
                 <div class="mr-2"><input class= "check-box h-3 w-3 text-blue-600 rounded focus:ring-blue-500" type="checkbox"></div>
-                <div class="w-1/7 ">${totime}</div>
                 <div class="w-6/7 text-sm" >
                     <div class="w-full">${task}</div>
-                    <div class="w-full">${formattedDate}</div>
+                    <div class="w-full">${formattedDate} ${totime}</div>
+                </div>
+                <div class="flex flex-col items-end w-1/7 text-xs">
+                    <div>${date}</div>
+                    <div>${hours}:${minutes}</div>
                 </div>`
                 todoList.insertBefore(newTask, todoList.firstChild);
                 popUp.classList.remove('hidden', 'opacity-0')
