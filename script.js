@@ -228,6 +228,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
           }
           function exportTasks() {
+            if(todoList.children.length === 0 && doneList.children.length === 0) {
+                alert('Tidak ada pekerjaan')
+                return
+            }
+            else {
             const tasks = {
                 todo: JSON.parse(localStorage.getItem('task')) || [],
                 done: JSON.parse(localStorage.getItem('doneTask')) || []
@@ -243,6 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+        }
         }
         
         // Tambahkan fungsi untuk impor dari file
