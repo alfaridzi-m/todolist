@@ -60,14 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //delete task  
     DeleteTodo.addEventListener('click', function() {
-        if (confirm('Apakah anda yakin ingin menghapus Todo dan Done?')) {
+        if (confirm('Apakah anda yakin ingin menghapus list Todo?')) {
             todoList.innerHTML = '';
             updateCounts();
             saveLocal();
         }
     });
     deleteDone.addEventListener('click', function() {
-        if (confirm('Apakah anda yakin ingin menghapus Todo dan Done?')) {
+        if (confirm('Apakah anda yakin ingin menghapus list Done?')) {
             doneList.innerHTML = '';
             updateCounts();
             saveLocal();
